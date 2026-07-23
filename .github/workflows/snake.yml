@@ -261,8 +261,8 @@ jobs:
               ".snake-face{stroke:#082f49;stroke-width:.8px;"
               "vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}"
               ".snake-top{fill:#67E8F9}"
-              ".snake-side-a{fill:#075985}"
-              ".snake-side-b{fill:#0EA5E9}"
+              ".snake-side-a{fill:#0EA5E9}"
+              ".snake-side-b{fill:#22D3EE}"
               ".iso-plane .s{filter:drop-shadow(0 0 3px #38BDF8) "
               "drop-shadow(0 0 8px #0EA5E9)}"
           )
@@ -308,6 +308,88 @@ jobs:
               encoding="utf-8",
           )
 
+          PY
+
+      - name: Generate self-hosted public activity cards
+        shell: bash
+        run: |
+          python <<'PY'
+          import html
+          import json
+          import urllib.request
+          from pathlib import Path
+
+          user = "xlr-aex"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "User-Agent": "xlr-aex-profile",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+
+          def api(url):
+              request = urllib.request.Request(url, headers=headers)
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.load(response)
+
+          profile = api(f"https://api.github.com/users/{user}")
+          repos = api(f"https://api.github.com/users/{user}/repos?type=owner&sort=updated&per_page=100")
+          stars = sum(repo.get("stargazers_count", 0) for repo in repos)
+          forks = sum(repo.get("forks_count", 0) for repo in repos)
+          languages = {}
+          for repo in repos:
+              for language, count in api(repo["languages_url"]).items():
+                  languages[language] = languages.get(language, 0) + count
+
+          colors = ["#38BDF8", "#A78BFA", "#F43F5E", "#22C55E", "#F59E0B"]
+          language_rows = sorted(languages.items(), key=lambda item: item[1], reverse=True)[:5]
+          total = sum(count for _, count in language_rows) or 1
+
+          def card_shell(body, label):
+              return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 210" width="900" height="210" role="img" aria-label="{html.escape(label)}">
+          <style>
+          .frame{{fill:#000;stroke:#30363d;stroke-width:1}}.cut{{fill:#0d1117;stroke:#30363d}}
+          .label{{fill:#8b949e;font:600 12px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:2px}}
+          .value{{fill:#f0f6fc;font:700 34px ui-monospace,SFMono-Regular,Consolas,monospace}}
+          .small{{fill:#c9d1d9;font:600 14px ui-monospace,SFMono-Regular,Consolas,monospace}}
+          .scan{{animation:scan 5s linear infinite}}@keyframes scan{{0%{{transform:translateX(-180px)}}100%{{transform:translateX(980px)}}}}
+          .pulse{{animation:pulse 2.6s ease-in-out infinite}}@keyframes pulse{{50%{{opacity:.55}}}}
+          </style>
+          <path class="frame" d="M12 0H888L900 12V198L888 210H12L0 198V12Z"/>
+          <path fill="#161b22" d="M0 36H900V37H0Z"/><path class="scan" fill="#38bdf8" opacity=".18" d="M0 36H180V37H0Z"/>
+          <circle class="pulse" cx="22" cy="18" r="4" fill="#39d353"/><text class="label" x="36" y="22">{html.escape(label)}</text>
+          {body}</svg>'''
+
+          stat_items = [
+              ("PUBLIC REPOS", profile.get("public_repos", len(repos)), "#38BDF8"),
+              ("FOLLOWERS", profile.get("followers", 0), "#A78BFA"),
+              ("STARS", stars, "#F59E0B"),
+              ("FORKS", forks, "#22C55E"),
+          ]
+          stat_body = []
+          for index, (label, value, color) in enumerate(stat_items):
+              x = 28 + index * 218
+              stat_body.append(f'<path class="cut" d="M{x} 58H{x+190}L{x+202} 70V180L{x+190} 192H{x}Z"/>')
+              stat_body.append(f'<path fill="{color}" d="M{x} 58H{x+82}V61H{x}Z"/>')
+              stat_body.append(f'<text class="label" x="{x+16}" y="92">{label}</text>')
+              stat_body.append(f'<text class="value" x="{x+16}" y="145">{value}</text>')
+          stats_svg = card_shell("".join(stat_body), "PUBLIC PROFILE METRICS")
+
+          language_body = ['<text class="label" x="28" y="68">PUBLIC REPOSITORY LANGUAGES</text>']
+          cursor = 28.0
+          for index, (language, count) in enumerate(language_rows):
+              width = 844 * count / total
+              language_body.append(f'<rect x="{cursor:.2f}" y="82" width="{width:.2f}" height="18" rx="3" fill="{colors[index]}"/>')
+              cursor += width
+          for index, (language, count) in enumerate(language_rows):
+              x = 28 + (index % 3) * 288
+              y = 132 + (index // 3) * 38
+              percent = 100 * count / total
+              language_body.append(f'<circle cx="{x+6}" cy="{y-5}" r="6" fill="{colors[index]}"/>')
+              language_body.append(f'<text class="small" x="{x+20}" y="{y}">{html.escape(language)}  {percent:.1f}%</text>')
+          languages_svg = card_shell("".join(language_body), "PUBLIC LANGUAGE DISTRIBUTION")
+
+          Path("dist/public-profile-metrics.svg").write_text(stats_svg, encoding="utf-8")
+          Path("dist/public-language-distribution.svg").write_text(languages_svg, encoding="utf-8")
           PY
 
       - name: Publish the generated SVG
