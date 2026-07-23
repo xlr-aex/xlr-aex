@@ -77,28 +77,15 @@ jobs:
           duration_match = re.search(
               r'\.s\{[^}]*animation:none linear ([\d.]+)ms infinite', svg
           )
-          head_frames_match = re.search(
-              r'@keyframes s0\{(.*?)\}\.s\.s0\{', svg
-          )
           head_rect_match = re.search(
               r'<rect\b[^>]*class="s s0"[^>]*/>', svg
           )
 
-          if not duration_match or not head_frames_match or not head_rect_match:
+          if not duration_match or not head_rect_match:
               raise RuntimeError("Unable to read the generated snake timeline")
 
           duration_ms = float(duration_match.group(1))
-          head_times = sorted({
-              float(value)
-              for value in re.findall(r'([\d.]+)%', head_frames_match.group(1))
-          })
-          short_steps = [
-              end - start
-              for start, end in zip(head_times, head_times[1:])
-              if 0.04 <= end - start <= 0.20
-          ]
-          step_percent = sorted(short_steps)[len(short_steps) // 2]
-          step_ms = duration_ms * step_percent / 100
+          step_ms = 100.0
 
           eaten_at = []
           cell_pattern = re.compile(
