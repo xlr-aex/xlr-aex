@@ -52,12 +52,9 @@
 
 ### `PUBLIC ACTIVITY`
 
-<img width="99%" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=xlr-aex&theme=github_dark" alt="GitHub public profile summary" />
+<img width="99%" src="https://raw.githubusercontent.com/xlr-aex/xlr-aex/output/public-profile-metrics.svg" alt="GitHub public profile metrics" />
 
-<img width="49%" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=xlr-aex&theme=github_dark" alt="GitHub public repositories by language" />
-<img width="49%" src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=xlr-aex&theme=github_dark&utcOffset=2" alt="GitHub public productive time" />
-
-<img width="99%" src="https://github-readme-activity-graph.vercel.app/graph?username=xlr-aex&bg_color=000000&color=FFFFFF&line=8B949E&point=FFFFFF&area=true&area_color=21262D&hide_border=true&radius=0&custom_title=PUBLIC%20CONTRIBUTION%20LOG" alt="GitHub public contribution graph" />
+<img width="99%" src="https://raw.githubusercontent.com/xlr-aex/xlr-aex/output/public-language-distribution.svg" alt="GitHub public language distribution" />
 
 <br />
 
