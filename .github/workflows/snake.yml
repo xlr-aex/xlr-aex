@@ -151,11 +151,33 @@ jobs:
           file.write_text(svg, encoding="utf-8")
 
           iso_svg = svg
-          iso_css = (
-              ".iso-plane{filter:drop-shadow(0 14px 18px rgba(0,0,0,.78))}"
-              ".iso-plane .s{filter:drop-shadow(0 0 3px #38BDF8) "
-              "drop-shadow(0 0 8px #0EA5E9) drop-shadow(0 6px 0 #075985)}"
-          )
+          projection_a = 0.78
+          projection_b = 0.32
+          vertical_scale = projection_b * 2
+          tower_heights = {1: 8, 2: 18, 3: 30, 4: 44}
+
+          def pt(x, y):
+              return f"{x:.1f},{y:.1f}"
+
+          def cuboid_markup(css_class, x, y, size, screen_height, kind):
+              lift = screen_height / vertical_scale
+              q1 = (x - lift, y - lift)
+              q2 = (x + size - lift, y - lift)
+              q3 = (x + size - lift, y + size - lift)
+              q4 = (x - lift, y + size - lift)
+              p2 = (x + size, y)
+              p3 = (x + size, y + size)
+              p4 = (x, y + size)
+              top = " ".join(pt(*point) for point in (q1, q2, q3, q4))
+              side_a = " ".join(pt(*point) for point in (q2, q3, p3, p2))
+              side_b = " ".join(pt(*point) for point in (q3, q4, p4, p3))
+              return (
+                  f'<g class="{css_class} {kind}-cube">'
+                  f'<polygon class="{kind}-face {kind}-side-a" points="{side_a}"/>'
+                  f'<polygon class="{kind}-face {kind}-side-b" points="{side_b}"/>'
+                  f'<polygon class="{kind}-face {kind}-top" points="{top}"/>'
+                  '</g>'
+              )
 
           cell_rule_pattern = re.compile(
               r'\.c\.([0-9a-z]+)\{fill:var\(--c([1-4])\);animation-name:[^}]+\}'
@@ -164,47 +186,86 @@ jobs:
               (match.group(1), int(match.group(2)))
               for match in cell_rule_pattern.finditer(iso_svg)
           ]
-          side_colors = {
-              1: "#064E3B",
-              2: "#065F46",
-              3: "#047857",
-              4: "#059669",
-          }
 
           for cell_name, level in cell_levels:
-              depth = 2 + level * 2
-              cell_filter = (
-                  f"drop-shadow(0 {depth}px 0 {side_colors[level]}) "
-                  f"drop-shadow(0 {depth + 5}px 7px rgba(0,0,0,.72))"
-              )
               frame_pattern = re.compile(
                   rf'(@keyframes {cell_name}\{{)(.*?)(\}}\.c\.{cell_name}\{{)',
                   re.DOTALL,
               )
               frame_match = frame_pattern.search(iso_svg)
-              if not frame_match:
-                  continue
+              if frame_match:
+                  frame_body = frame_match.group(2)
+                  frame_body = frame_body.replace(
+                      f"fill:var(--c{level})",
+                      f"fill:var(--c{level});opacity:1",
+                  )
+                  frame_body = frame_body.replace(
+                      "fill:var(--ce)",
+                      "fill:var(--ce);opacity:0",
+                  )
+                  iso_svg = (
+                      iso_svg[:frame_match.start(2)]
+                      + frame_body
+                      + iso_svg[frame_match.end(2):]
+                  )
 
-              frame_body = frame_match.group(2)
-              frame_body = frame_body.replace(
-                  f"fill:var(--c{level})",
-                  f"fill:var(--c{level});filter:{cell_filter}",
-              )
-              frame_body = frame_body.replace(
-                  "fill:var(--ce)",
-                  "fill:var(--ce);filter:none",
-              )
-              iso_svg = (
-                  iso_svg[:frame_match.start(2)]
-                  + frame_body
-                  + iso_svg[frame_match.end(2):]
-              )
               iso_svg = iso_svg.replace(
                   f".c.{cell_name}{{fill:var(--c{level});",
-                  f".c.{cell_name}{{fill:var(--c{level});filter:{cell_filter};",
+                  f".c.{cell_name}{{fill:var(--c{level});opacity:1;",
                   1,
               )
+              rect_pattern = re.compile(
+                  rf'<rect class="c {cell_name}" x="([\d.]+)" y="([\d.]+)"[^>]*/>'
+              )
+              rect_match = rect_pattern.search(iso_svg)
+              if rect_match:
+                  tower = cuboid_markup(
+                      f"c {cell_name}",
+                      float(rect_match.group(1)),
+                      float(rect_match.group(2)),
+                      12,
+                      tower_heights[level],
+                      "tower",
+                  )
+                  iso_svg = (
+                      iso_svg[:rect_match.start()]
+                      + tower
+                      + iso_svg[rect_match.end():]
+                  )
 
+          snake_pattern = re.compile(
+              r'<rect class="s ([^"]+)" x="([\d.]+)" y="([\d.]+)" '
+              r'width="([\d.]+)" height="[\d.]+"[^>]*/>'
+          )
+
+          def make_snake_cube(match):
+              size = float(match.group(4))
+              visual_width = size * (projection_a ** 2 + projection_b ** 2) ** 0.5
+              return cuboid_markup(
+                  f"s {match.group(1)}",
+                  float(match.group(2)),
+                  float(match.group(3)),
+                  size,
+                  visual_width,
+                  "snake",
+              )
+
+          iso_svg = snake_pattern.sub(make_snake_cube, iso_svg)
+          iso_css = (
+              ".iso-plane{filter:drop-shadow(0 16px 20px rgba(0,0,0,.82))}"
+              ".tower-face{fill:inherit;stroke:#07111f;stroke-width:.8px;"
+              "vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}"
+              ".tower-side-a{filter:brightness(.48)}"
+              ".tower-side-b{filter:brightness(.68)}"
+              ".tower-top{filter:brightness(1.18)}"
+              ".snake-face{stroke:#082f49;stroke-width:.8px;"
+              "vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}"
+              ".snake-top{fill:#67E8F9}"
+              ".snake-side-a{fill:#075985}"
+              ".snake-side-b{fill:#0EA5E9}"
+              ".iso-plane .s{filter:drop-shadow(0 0 3px #38BDF8) "
+              "drop-shadow(0 0 8px #0EA5E9)}"
+          )
           iso_svg = iso_svg.replace(
               "</style>",
               iso_css + "</style>",
@@ -225,7 +286,7 @@ jobs:
           iso_svg = (
               iso_svg[:style_end]
               + '<rect width="900" height="440" fill="#000"/>'
-              + '<g class="iso-plane" transform="matrix(.78 .32 -.78 .32 110 58)">'
+              + '<g class="iso-plane" transform="matrix(.78 .32 -.78 .32 110 62)">'
               + drawing
               + "</g></svg>"
           )
