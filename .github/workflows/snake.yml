@@ -291,6 +291,18 @@ jobs:
               + "</g></svg>"
           )
 
+          tower_count = iso_svg.count("tower-cube")
+          snake_cube_count = iso_svg.count("snake-cube")
+          polygon_count = iso_svg.count("<polygon")
+          if tower_count == 0 or tower_count != len(cell_levels):
+              raise RuntimeError(
+                  f"3D tower generation failed: {tower_count}/{len(cell_levels)} towers"
+              )
+          if snake_cube_count < 2 or polygon_count != 3 * (tower_count + snake_cube_count):
+              raise RuntimeError(
+                  f"3D snake generation failed: {snake_cube_count} cubes, {polygon_count} faces"
+              )
+
           Path("dist/github-contribution-grid-snake-neon-3d.svg").write_text(
               iso_svg,
               encoding="utf-8",
