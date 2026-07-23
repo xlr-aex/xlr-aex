@@ -32,7 +32,6 @@
 
 <div align="center">
 
-### `PUBLIC ACTIVITY`
 
 <img width="99%" src="https://raw.githubusercontent.com/xlr-aex/xlr-aex/output/public-profile-metrics.svg" alt="GitHub public profile metrics" />
 
