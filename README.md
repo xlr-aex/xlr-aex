@@ -65,6 +65,6 @@
 <br />
 
 <!-- CONTRIBUTION SNAKE · ISOMETRIC 3D -->
-<img width="99%" src="https://raw.githubusercontent.com/xlr-aex/xlr-aex/output/github-contribution-grid-snake-neon-3d.svg" alt="Animated neon isometric 3D contribution snake" />
+<img width="99%" src="https://raw.githubusercontent.com/xlr-aex/xlr-aex/output/github-contribution-grid-snake-neon-3d.svg?v=iso30-depth-a68c3ed" alt="Animated neon isometric 3D contribution snake" />
 
 </div>
