@@ -322,8 +322,10 @@ jobs:
               + "</g></svg>"
           )
 
-          tower_count = iso_svg.count("tower-cube")
-          base_tile_count = iso_svg.count("contribution-base")
+          tower_count = len(re.findall(r'<g class="c [^"]+ tower-cube">', iso_svg))
+          base_tile_count = len(
+              re.findall(r'<rect class="c contribution-base"', iso_svg)
+          )
           snake_cube_count = iso_svg.count("snake-cube")
           polygon_count = iso_svg.count("<polygon")
           if base_tile_count != tower_count:
