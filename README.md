@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Press+Start+2P&size=14&duration=1800&pause=650&color=FFFFFF&background=000000&center=true&vCenter=true&multiline=true&repeat=true&width=900&height=170&lines=%24+whoami;%3E+xlr-aex;%24+cat+focus.txt;%3E+OSINT+%2F+ARTIFICIAL+INTELLIGENCE+%2F+CYBERSECURITY;%24+status+--public;%3E+ONLINE_" alt="Animated terminal showing OSINT, artificial intelligence and cybersecurity" />
+<img width="99%" src="https://raw.githubusercontent.com/xlr-aex/xlr-aex/main/assets/terminal.svg" alt="Animated terminal with human-like typing and corrections" />
 
 <br />
 
@@ -61,6 +61,13 @@
 
 <br />
 
+<!-- CONTRIBUTION SNAKE · 2D -->
 <img width="99%" src="https://raw.githubusercontent.com/xlr-aex/xlr-aex/output/github-contribution-grid-snake-neon.svg" alt="Animated neon contribution snake" />
+
+<br />
+<br />
+
+<!-- CONTRIBUTION SNAKE · ISOMETRIC 3D -->
+<img width="99%" src="https://raw.githubusercontent.com/xlr-aex/xlr-aex/output/github-contribution-grid-snake-neon-3d.svg" alt="Animated neon isometric 3D contribution snake" />
 
 </div>
