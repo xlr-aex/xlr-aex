@@ -151,8 +151,8 @@ jobs:
           file.write_text(svg, encoding="utf-8")
 
           iso_svg = svg
-          projection_a = 0.78
-          projection_b = 0.32
+          projection_a = 0.8660254
+          projection_b = 0.5
           vertical_scale = projection_b * 2
           tower_heights = {1: 8, 2: 18, 3: 30, 4: 44}
 
@@ -239,18 +239,41 @@ jobs:
           )
 
           def make_snake_cube(match):
-              size = float(match.group(4))
-              visual_width = size * (projection_a ** 2 + projection_b ** 2) ** 0.5
+              original_size = float(match.group(4))
+              size = 12.0
+              inset = (original_size - size) / 2
               return cuboid_markup(
                   f"s {match.group(1)}",
-                  float(match.group(2)),
-                  float(match.group(3)),
+                  float(match.group(2)) + inset,
+                  float(match.group(3)) + inset,
                   size,
-                  visual_width,
+                  size,
                   "snake",
               )
 
           iso_svg = snake_pattern.sub(make_snake_cube, iso_svg)
+
+          # SVG uses a painter's algorithm: tail must be painted first and head last.
+          # Logical lag is s0..s3, then g0..g16 as the snake grows.
+          snake_group_pattern = re.compile(
+              r'<g class="s ([^"]+) snake-cube">.*?</g>',
+              re.DOTALL,
+          )
+          snake_groups = [
+              (match.group(1), match.group(0))
+              for match in snake_group_pattern.finditer(iso_svg)
+          ]
+
+          def snake_lag(class_name):
+              return int(class_name[1:]) if class_name.startswith("s") else 4 + int(class_name[1:])
+
+          snake_groups.sort(key=lambda item: snake_lag(item[0]), reverse=True)
+          iso_svg = snake_group_pattern.sub("", iso_svg)
+          iso_svg = iso_svg.replace(
+              "</svg>",
+              "".join(markup for _, markup in snake_groups) + "</svg>",
+              1,
+          )
           iso_css = (
               ".iso-plane{filter:drop-shadow(0 16px 20px rgba(0,0,0,.82))}"
               ".tower-face{fill:inherit;stroke:#07111f;stroke-width:.8px;"
@@ -273,20 +296,20 @@ jobs:
           )
           iso_svg = re.sub(
               r'viewBox="[^"]+"',
-              'viewBox="0 0 900 440"',
+              'viewBox="0 0 900 540"',
               iso_svg,
               count=1,
           )
           iso_svg = re.sub(r'width="[^"]+"', 'width="900"', iso_svg, count=1)
-          iso_svg = re.sub(r'height="[^"]+"', 'height="440"', iso_svg, count=1)
+          iso_svg = re.sub(r'height="[^"]+"', 'height="540"', iso_svg, count=1)
 
           style_end = iso_svg.index("</style>") + len("</style>")
           svg_end = iso_svg.rfind("</svg>")
           drawing = iso_svg[style_end:svg_end]
           iso_svg = (
               iso_svg[:style_end]
-              + '<rect width="900" height="440" fill="#000"/>'
-              + '<g class="iso-plane" transform="matrix(.78 .32 -.78 .32 110 62)">'
+              + '<rect width="900" height="540" fill="#000"/>'
+              + '<g class="iso-plane" transform="matrix(.8660254 .5 -.8660254 .5 105 58)">'
               + drawing
               + "</g></svg>"
           )
@@ -297,6 +320,12 @@ jobs:
           if tower_count == 0 or tower_count != len(cell_levels):
               raise RuntimeError(
                   f"3D tower generation failed: {tower_count}/{len(cell_levels)} towers"
+              )
+          if not snake_groups or snake_groups[-1][0] != "s0":
+              raise RuntimeError("3D snake depth order is invalid")
+          if snake_cube_count != len(snake_groups):
+              raise RuntimeError(
+                  f"3D snake group mismatch: {snake_cube_count}/{len(snake_groups)}"
               )
           if snake_cube_count < 2 or polygon_count != 3 * (tower_count + snake_cube_count):
               raise RuntimeError(
