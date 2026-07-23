@@ -38,6 +38,14 @@
 </tr>
 </table>
 
+<br />
+
+<div align="center">
+<br />
+<img width="390" src="https://skillicons.dev/icons?i=ts,js,python,html,css&theme=dark&perline=5" alt="TypeScript, JavaScript, Python, HTML and CSS" />
+<br />
+</div>
+
 ---
 
 <div align="center">
@@ -50,5 +58,9 @@
 <img width="49%" src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=xlr-aex&theme=github_dark&utcOffset=2" alt="GitHub public productive time" />
 
 <img width="99%" src="https://github-readme-activity-graph.vercel.app/graph?username=xlr-aex&bg_color=000000&color=FFFFFF&line=8B949E&point=FFFFFF&area=true&area_color=21262D&hide_border=true&radius=0&custom_title=PUBLIC%20CONTRIBUTION%20LOG" alt="GitHub public contribution graph" />
+
+<br />
+
+<img width="99%" src="https://raw.githubusercontent.com/xlr-aex/xlr-aex/output/github-contribution-grid-snake-neon.svg" alt="Animated neon contribution snake" />
 
 </div>
