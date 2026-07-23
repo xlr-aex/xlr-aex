@@ -13,31 +13,28 @@
 
 ---
 
+<table width="100%">
+<tr>
+<td width="34%" align="center" valign="middle"><img src="https://img.shields.io/badge/-OSINT-0EA5E9?style=for-the-badge" alt="OSINT" /></td>
+<td width="66%" valign="middle"><blockquote>Open-source research, source discovery and the structured analysis of public information.</blockquote></td>
+</tr>
+</table>
+
+<br />
 
 <table width="100%">
 <tr>
-<td width="34%" align="center" valign="middle">
-<h1>OSINT</h1>
-</td>
-<td width="66%" valign="middle">
-<blockquote>Open-source research, source discovery and the structured analysis of public information.</blockquote>
-</td>
+<td width="66%" valign="middle"><blockquote>Applied AI for analysis, automation and making complex information easier to navigate.</blockquote></td>
+<td width="34%" align="center" valign="middle"><img src="https://img.shields.io/badge/-Artificial%20intelligence-8B5CF6?style=for-the-badge" alt="Artificial intelligence" /></td>
 </tr>
+</table>
+
+<br />
+
+<table width="100%">
 <tr>
-<td width="66%" valign="middle">
-<blockquote>Applied AI for analysis, automation and making complex information easier to navigate.</blockquote>
-</td>
-<td width="34%" align="center" valign="middle">
-<h1>Artificial<br />intelligence</h1>
-</td>
-</tr>
-<tr>
-<td width="34%" align="center" valign="middle">
-<h1>Cybersecurity</h1>
-</td>
-<td width="66%" valign="middle">
-<blockquote>Security-minded systems with attention to privacy, exposure and technical resilience.</blockquote>
-</td>
+<td width="34%" align="center" valign="middle"><img src="https://img.shields.io/badge/-Cybersecurity-E11D48?style=for-the-badge" alt="Cybersecurity" /></td>
+<td width="66%" valign="middle"><blockquote>Security-minded systems with attention to privacy, exposure and technical resilience.</blockquote></td>
 </tr>
 </table>
 
