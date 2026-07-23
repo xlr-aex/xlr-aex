@@ -21,7 +21,7 @@ jobs:
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/github-contribution-grid-snake-neon.svg?palette=github-dark&color_snake=#38BDF8&color_dots=#161B22,#0E4429,#006D32,#26A641,#39D353
+            dist/github-contribution-grid-snake-neon.svg?palette=github-dark&color_snake=#38BDF8&color_dots=#161B22,#007A46,#00B96B,#00E887,#39FF9A
 
       - name: Make every snake segment uniform and neon
         shell: bash
@@ -227,8 +227,14 @@ jobs:
                       tower_heights[level],
                       "tower",
                   )
+                  base_tile = (
+                      f'<rect class="c contribution-base" '
+                      f'x="{rect_match.group(1)}" y="{rect_match.group(2)}" '
+                      'rx="2" ry="2"/>'
+                  )
                   iso_svg = (
                       iso_svg[:rect_match.start()]
+                      + base_tile
                       + tower
                       + iso_svg[rect_match.end():]
                   )
@@ -276,7 +282,9 @@ jobs:
           )
           iso_css = (
               ".iso-plane{filter:drop-shadow(0 16px 20px rgba(0,0,0,.82))}"
-              ".tower-face{fill:inherit;stroke:#07111f;stroke-width:.8px;"
+              ".contribution-base{fill:var(--ce)!important;opacity:1!important;animation:none!important}"
+              ".tower-cube{filter:drop-shadow(0 0 2px #00E887) drop-shadow(0 0 7px rgba(57,255,154,.72))}"
+              ".tower-face{fill:inherit;stroke:#003820;stroke-width:.8px;"
               "vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}"
               ".tower-side-a{filter:brightness(.48)}"
               ".tower-side-b{filter:brightness(.68)}"
@@ -315,8 +323,13 @@ jobs:
           )
 
           tower_count = iso_svg.count("tower-cube")
+          base_tile_count = iso_svg.count("contribution-base")
           snake_cube_count = iso_svg.count("snake-cube")
           polygon_count = iso_svg.count("<polygon")
+          if base_tile_count != tower_count:
+              raise RuntimeError(
+                  f"3D contribution base mismatch: {base_tile_count}/{tower_count}"
+              )
           if tower_count == 0 or tower_count != len(cell_levels):
               raise RuntimeError(
                   f"3D tower generation failed: {tower_count}/{len(cell_levels)} towers"
