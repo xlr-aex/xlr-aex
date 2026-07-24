@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 210" width="900" height="210" role="img" aria-label="PUBLIC LANGUAGE DISTRIBUTION">
+<style>
+.frame{fill:#000;stroke:#30363d;stroke-width:1}.cut{fill:#0d1117;stroke:#30363d}
+.label{fill:#8b949e;font:600 12px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:2px}
+.value{fill:#f0f6fc;font:700 34px ui-monospace,SFMono-Regular,Consolas,monospace}
+.small{fill:#c9d1d9;font:600 14px ui-monospace,SFMono-Regular,Consolas,monospace}
+.scan{animation:scan 5s linear infinite}@keyframes scan{0%{transform:translateX(-180px)}100%{transform:translateX(980px)}}
+.pulse{animation:pulse 2.6s ease-in-out infinite}@keyframes pulse{50%{opacity:.55}}
+</style>
+<path class="frame" d="M12 0H888L900 12V198L888 210H12L0 198V12Z"/>
+<path fill="#161b22" d="M0 36H900V37H0Z"/><path class="scan" fill="#38bdf8" opacity=".18" d="M0 36H180V37H0Z"/>
+<circle class="pulse" cx="22" cy="18" r="4" fill="#39d353"/><text class="label" x="36" y="22">PUBLIC LANGUAGE DISTRIBUTION</text>
+<text class="label" x="28" y="68">PUBLIC REPOSITORY LANGUAGES</text><rect x="28.00" y="82" width="609.30" height="18" rx="3" fill="#38BDF8"/><rect x="637.30" y="82" width="115.22" height="18" rx="3" fill="#A78BFA"/><rect x="752.52" y="82" width="66.22" height="18" rx="3" fill="#F43F5E"/><rect x="818.74" y="82" width="30.49" height="18" rx="3" fill="#22C55E"/><rect x="849.23" y="82" width="22.77" height="18" rx="3" fill="#F59E0B"/><circle cx="34" cy="127" r="6" fill="#38BDF8"/><text class="small" x="48" y="132">TypeScript  72.2%</text><circle cx="322" cy="127" r="6" fill="#A78BFA"/><text class="small" x="336" y="132">Python  13.7%</text><circle cx="610" cy="127" r="6" fill="#F43F5E"/><text class="small" x="624" y="132">CSS  7.8%</text><circle cx="34" cy="165" r="6" fill="#22C55E"/><text class="small" x="48" y="170">SCSS  3.6%</text><circle cx="322" cy="165" r="6" fill="#F59E0B"/><text class="small" x="336" y="170">JavaScript  2.7%</text></svg>

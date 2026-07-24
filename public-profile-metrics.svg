@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 210" width="900" height="210" role="img" aria-label="PUBLIC PROFILE METRICS">
+<style>
+.frame{fill:#000;stroke:#30363d;stroke-width:1}.cut{fill:#0d1117;stroke:#30363d}
+.label{fill:#8b949e;font:600 12px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:2px}
+.value{fill:#f0f6fc;font:700 34px ui-monospace,SFMono-Regular,Consolas,monospace}
+.small{fill:#c9d1d9;font:600 14px ui-monospace,SFMono-Regular,Consolas,monospace}
+.scan{animation:scan 5s linear infinite}@keyframes scan{0%{transform:translateX(-180px)}100%{transform:translateX(980px)}}
+.pulse{animation:pulse 2.6s ease-in-out infinite}@keyframes pulse{50%{opacity:.55}}
+</style>
+<path class="frame" d="M12 0H888L900 12V198L888 210H12L0 198V12Z"/>
+<path fill="#161b22" d="M0 36H900V37H0Z"/><path class="scan" fill="#38bdf8" opacity=".18" d="M0 36H180V37H0Z"/>
+<circle class="pulse" cx="22" cy="18" r="4" fill="#39d353"/><text class="label" x="36" y="22">PUBLIC PROFILE METRICS</text>
+<path class="cut" d="M28 58H218L230 70V180L218 192H28Z"/><path fill="#38BDF8" d="M28 58H110V61H28Z"/><text class="label" x="44" y="92">PUBLIC REPOS</text><text class="value" x="44" y="145">9</text><path class="cut" d="M246 58H436L448 70V180L436 192H246Z"/><path fill="#A78BFA" d="M246 58H328V61H246Z"/><text class="label" x="262" y="92">FOLLOWERS</text><text class="value" x="262" y="145">6</text><path class="cut" d="M464 58H654L666 70V180L654 192H464Z"/><path fill="#F59E0B" d="M464 58H546V61H464Z"/><text class="label" x="480" y="92">STARS</text><text class="value" x="480" y="145">2</text><path class="cut" d="M682 58H872L884 70V180L872 192H682Z"/><path fill="#22C55E" d="M682 58H764V61H682Z"/><text class="label" x="698" y="92">FORKS</text><text class="value" x="698" y="145">0</text></svg>
